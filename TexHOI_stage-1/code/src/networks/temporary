@@ -1,0 +1,335 @@
+# return diffuse_albedo
+        
+        # import trimesh
+        # mesh = trimesh.load("/home/alakhaggarwal/Downloads/DexYCB/models/004_sugar_box/textured_simple.obj")
+        # points_wc = deformer.forward_env(points.unsqueeze(0), tfs)[0]
+        
+        # ray_sampler = UniformSampler(0.1, 0.0, 16)
+        # mask = np.zeros((points.shape[0]), dtype=bool)
+        # threshold = 0.1
+        # if right_node is not None:
+        #     (
+        #         sdf_output,
+        #         canonical_points,
+        #         feats
+        #     ) = volsdf_utils.sdf_func_with_deformer(
+        #                 right_node.deformer,
+        #                 right_node.implicit_network,
+        #                 right_node.training,
+        #                 points_wc,
+        #                 right_node.deform_info,
+        #                 right_node.node_id
+        #             )
+        #     sdf_output = sdf_output.view(-1).detach().cpu().numpy()
+        #     mask[sdf_output <= threshold] = True
+        #     del canonical_points, feats, sdf_output
+        # if left_node is not None:
+        #     (
+        #         sdf_output,
+        #         canonical_points,
+        #         feats
+        #     ) = volsdf_utils.sdf_func_with_deformer(
+        #                 left_node.deformer,
+        #                 left_node.implicit_network,
+        #                 left_node.training,
+        #                 points_wc,
+        #                 left_node.deform_info,
+        #                 left_node.node_id
+        #             )
+        #     sdf_output = sdf_output.view(-1).detach().cpu().numpy()
+        #     mask[sdf_output <= threshold] = True
+        #     del canonical_points, feats, sdf_output
+
+        # mask_total = torch.from_numpy(mask).cuda().detach()
+        # point_mask = mask_total.unsqueeze(1).expand(points_wc.shape)
+        # final_points = torch.masked_select(points, point_mask).reshape((-1,3)) # n,3
+        # final_points = torch.masked_select(points_wc, point_mask).reshape((-1,3)) # n,3
+        # final_points = points
+        # print (final_points.shape)
+        # pc = trimesh.PointCloud(final_points.detach().cpu().numpy())
+        # scene = trimesh.scene.Scene()
+        # scene.add_geometry(mesh)
+        # scene.add_geometry(pc)
+        # scene.show()
+        # exit()
+        
+        # MAX_LEN = 50
+        # if mask_total.sum()>0:
+        #     if mask_total.sum() > MAX_LEN:
+        #         split_mask = torch.split(mask_total, MAX_LEN)
+        #         split_points = torch.split(points_wc,MAX_LEN)
+        #         split_lgt = torch.split(lgtSGs,MAX_LEN)
+        #         LEN = len(split_mask)
+        #         for i in range(LEN):
+        #             mask = split_mask[i]
+        #             pwc = split_points[i]
+        #             lgt = split_lgt[i]
+        #             if mask.sum()==0:
+        #                 continue
+        #             point_mask = mask.unsqueeze(1).expand((mask.shape[0],3))
+        #             final_points = torch.masked_select(pwc, point_mask).reshape((-1,3)) # n,3
+        #             n = final_points.shape[0]
+        #             lgt_mask = mask.unsqueeze(1).unsqueeze(1).expand((mask.shape[0],128,7))
+        #             final_lgts = torch.masked_select(lgt, lgt_mask).reshape((n,128,7)).reshape((-1,7)) # n*128,7
+        #             final_points = final_points.unsqueeze(1).expand((n,128,3)).reshape((-1,3)) # n*128,3
+
+        #             lobe_intensity_old = final_lgts[:,4:].clone()
+        #             lobe_intensity_new = lobe_intensity_old
+        #             lobe_width = final_lgts[:, 3:4].clone()
+        #             lobe_directions = final_lgts[:, :3].clone()
+
+        #             cam_loc = final_points
+        #             ray_dirs = lobe_directions
+        #             ray_dirs = torch.nn.functional.normalize(ray_dirs)
+
+        #             if right_node is not None:
+        #                 z_vals = ray_sampler.get_z_vals(ray_dirs, cam_loc, False)
+        #                 pts = cam_loc.unsqueeze(1) + z_vals.unsqueeze(2) * ray_dirs.unsqueeze(1)
+        #                 (
+        #                     sdf_output,
+        #                     canonical_points,
+        #                     feats
+        #                 ) = volsdf_utils.sdf_func_with_deformer(
+        #                     right_node.deformer,
+        #                     right_node.implicit_network,
+        #                     right_node.training,
+        #                     pts.reshape(-1, 3),
+        #                     right_node.deform_info,
+        #                     right_node.node_id
+        #                 )
+        #                 num_samples = z_vals.shape[1]
+        #                 color, normal_, semantics = right_node.render(
+        #                     {"ray_dirs": ray_dirs, "cond": right_node.deform_info["cond"], "tfs": right_node.deform_info["tfs"]},
+        #                     num_samples,
+        #                     canonical_points,
+        #                     feats,
+        #                     None,
+        #                     right_node.node_id,
+        #                     None,None
+        #                 )
+        #                 density = right_node.density(sdf_output).view(-1, num_samples, 1)
+        #                 z_max, _ = torch.max(z_vals,1)
+        #                 fg_weights, bg_weights = volsdf_utils.density2weight(density, z_vals, z_max)
+        #                 right_mu = torch.sum(color * fg_weights[:, :, None], dim=1)
+        #                 right_mu = torch.clamp(right_mu, min=0., max=1.).detach()
+        #                 lobe_intensity_new = lobe_intensity_new*(1-right_mu)
+        #                 del z_vals, pts, sdf_output, canonical_points, feats, color, normal_, semantics, density, z_max, fg_weights, bg_weights
+
+        #             if left_node is not None:
+        #                 z_vals = ray_sampler.get_z_vals(ray_dirs, cam_loc, False)
+        #                 pts = cam_loc.unsqueeze(1) + z_vals.unsqueeze(2) * ray_dirs.unsqueeze(1)
+        #                 (
+        #                     sdf_output,
+        #                     canonical_points,
+        #                     feats
+        #                 ) = volsdf_utils.sdf_func_with_deformer(
+        #                     left_node.deformer,
+        #                     left_node.implicit_network,
+        #                     left_node.training,
+        #                     pts.reshape(-1, 3),
+        #                     left_node.deform_info,
+        #                     left_node.node_id
+        #                 )
+        #                 num_samples = z_vals.shape[1]
+        #                 color, normal_, semantics = left_node.render(
+        #                     {"ray_dirs": ray_dirs, "cond": left_node.deform_info["cond"], "tfs": left_node.deform_info["tfs"]},
+        #                     num_samples,
+        #                     canonical_points,
+        #                     feats,
+        #                     None,
+        #                     left_node.node_id,
+        #                     None,None
+        #                 )
+        #                 density = left_node.density(sdf_output).view(-1, num_samples, 1)
+        #                 z_max, _ = torch.max(z_vals,1)
+        #                 fg_weights, bg_weights = volsdf_utils.density2weight(density, z_vals, z_max)
+        #                 left_mu = torch.sum(color * fg_weights[:, :, None], dim=1)
+        #                 left_mu = torch.clamp(left_mu, min=0., max=1.).detach()
+        #                 lobe_intensity_new = lobe_intensity_new*(1-left_mu)
+        #                 del z_vals, pts, sdf_output, canonical_points, feats, color, normal_, semantics, density, z_max, fg_weights, bg_weights
+
+        #             lgtSGs = lgtSGs.clone()
+        #             lgtSGs[i:i+mask.shape[0]][mask] = torch.cat((lobe_directions, lobe_width, lobe_intensity_new), dim=-1).reshape((-1,128,7))
+        #             del final_lgts, final_points, lobe_directions, lobe_intensity_old, lobe_intensity_new
+        #             torch.cuda.empty_cache()
+        #     else:
+        #         mask = mask_total
+        #         point_mask = mask.unsqueeze(1).expand((mask.shape[0],3))
+        #         final_points = torch.masked_select(points_wc, point_mask).reshape((-1,3)) # n,3
+        #         n = final_points.shape[0]
+        #         lgt_mask = mask.unsqueeze(1).unsqueeze(1).expand((mask.shape[0],128,7))
+        #         final_lgts = torch.masked_select(lgtSGs, lgt_mask).reshape((n,128,7)).reshape((-1,7)) # n*128,7
+        #         final_points = final_points.unsqueeze(1).expand((n,128,3)).reshape((-1,3)) # n*128,3
+
+        #         lobe_intensity_old = final_lgts[:,4:].clone()
+        #         lobe_intensity_new = lobe_intensity_old
+        #         lobe_width = final_lgts[:, 3:4].clone()
+        #         lobe_directions = final_lgts[:, :3].clone()
+
+        #         cam_loc = final_points
+        #         ray_dirs = lobe_directions
+        #         ray_dirs = torch.nn.functional.normalize(ray_dirs)
+
+        #         if right_node is not None:
+        #             z_vals = ray_sampler.get_z_vals(ray_dirs, cam_loc, False)
+        #             pts = cam_loc.unsqueeze(1) + z_vals.unsqueeze(2) * ray_dirs.unsqueeze(1)
+        #             (
+        #                 sdf_output,
+        #                 canonical_points,
+        #                 feats
+        #             ) = volsdf_utils.sdf_func_with_deformer(
+        #                 right_node.deformer,
+        #                 right_node.implicit_network,
+        #                 right_node.training,
+        #                 pts.reshape(-1, 3),
+        #                 right_node.deform_info,
+        #                 right_node.node_id
+        #             )
+        #             num_samples = z_vals.shape[1]
+        #             color, normal_, semantics = right_node.render(
+        #                 {"ray_dirs": ray_dirs, "cond": right_node.deform_info["cond"], "tfs": right_node.deform_info["tfs"]},
+        #                 num_samples,
+        #                 canonical_points,
+        #                 feats,
+        #                 None,
+        #                 right_node.node_id,
+        #                 None,None
+        #             )
+        #             density = right_node.density(sdf_output).view(-1, num_samples, 1)
+        #             z_max, _ = torch.max(z_vals,1)
+        #             fg_weights, bg_weights = volsdf_utils.density2weight(density, z_vals, z_max)
+        #             right_mu = torch.sum(color * fg_weights[:, :, None], dim=1)
+        #             right_mu = torch.clamp(right_mu, min=0., max=1.).detach()
+        #             lobe_intensity_new = lobe_intensity_new*(1-right_mu)
+        #             del z_vals, pts, sdf_output, canonical_points, feats, color, normal_, semantics, density, z_max, fg_weights, bg_weights
+
+        #         if left_node is not None:
+        #             z_vals = ray_sampler.get_z_vals(ray_dirs, cam_loc, False)
+        #             pts = cam_loc.unsqueeze(1) + z_vals.unsqueeze(2) * ray_dirs.unsqueeze(1)
+        #             (
+        #                 sdf_output,
+        #                 canonical_points,
+        #                 feats
+        #             ) = volsdf_utils.sdf_func_with_deformer(
+        #                 left_node.deformer,
+        #                 left_node.implicit_network,
+        #                 left_node.training,
+        #                 pts.reshape(-1, 3),
+        #                 left_node.deform_info,
+        #                 left_node.node_id
+        #             )
+        #             num_samples = z_vals.shape[1]
+        #             color, normal_, semantics = left_node.render(
+        #                 {"ray_dirs": ray_dirs, "cond": left_node.deform_info["cond"], "tfs": left_node.deform_info["tfs"]},
+        #                 num_samples,
+        #                 canonical_points,
+        #                 feats,
+        #                 None,
+        #                 left_node.node_id,
+        #                 None,None
+        #             )
+        #             density = left_node.density(sdf_output).view(-1, num_samples, 1)
+        #             z_max, _ = torch.max(z_vals,1)
+        #             fg_weights, bg_weights = volsdf_utils.density2weight(density, z_vals, z_max)
+        #             left_mu = torch.sum(color * fg_weights[:, :, None], dim=1)
+        #             left_mu = torch.clamp(left_mu, min=0., max=1.).detach()
+        #             lobe_intensity_new = lobe_intensity_new*(1-left_mu)
+        #             del z_vals, pts, sdf_output, canonical_points, feats, color, normal_, semantics, density, z_max, fg_weights, bg_weights
+
+        #         lgtSGs = lgtSGs.clone()
+        #         lgtSGs[mask] = torch.cat((lobe_directions, lobe_width, lobe_intensity_new), dim=-1).reshape((-1,128,7))
+        #         del final_lgts, final_points, lobe_directions, lobe_intensity_old, lobe_intensity_new
+
+
+
+
+
+
+        # if stage==2:
+        #     cam_loc = deformer.forward(points.reshape(tfs.shape[0], -1, 3), tfs)[0].reshape([1,-1,3]).expand([M, points.shape[0], points.shape[1]]).reshape([-1,3])
+        #     ray_dirs = lobe_directions_old.unsqueeze(0).expand([normal.shape[0]] + list(lobe_directions_old.shape)).reshape([-1,3])
+        #     ray_dirs = torch.nn.functional.normalize(ray_dirs)
+        #     ray_sampler = UniformSampler(0.1, 0.0, 8)
+        #     if right_node is not None:
+        #         z_vals = ray_sampler.get_z_vals(ray_dirs, cam_loc, False)
+        #         pts = cam_loc.unsqueeze(1) + z_vals.unsqueeze(2) * ray_dirs.unsqueeze(1)
+        #         (
+        #             sdf_output,
+        #             canonical_points,
+        #             feats
+        #         ) = volsdf_utils.sdf_func_with_deformer(
+        #             right_node.deformer,
+        #             right_node.implicit_network,
+        #             right_node.training,
+        #             pts.reshape(-1, 3),
+        #             right_node.deform_info,
+        #             right_node.node_id
+        #         )
+        #         num_samples = z_vals.shape[1]
+        #         color, normal_, semantics = right_node.render(
+        #             {"ray_dirs": ray_dirs, "cond": right_node.deform_info["cond"], "tfs": right_node.deform_info["tfs"]},
+        #             num_samples,
+        #             canonical_points,
+        #             feats,
+        #             None,
+        #             right_node.node_id,
+        #             None,None
+        #         )
+
+        #         density = right_node.density(sdf_output).view(-1, num_samples, 1)
+        #         z_max, _ = torch.max(z_vals,1)
+        #         fg_weights, bg_weights = volsdf_utils.density2weight(density, z_vals, z_max)
+        #         right_mu_ind = torch.sum(color * fg_weights[:, :, None], dim=1)
+        #         right_mu_vis = torch.sum(torch.ones_like(color) * fg_weights[:, :, None], dim=1)
+        #         right_mu_ind = torch.clamp(right_mu_ind, min=0., max=1.).detach().reshape([normal.shape[0]] + list(lobe_directions_old.shape))
+        #         right_mu_vis = torch.clamp(right_mu_vis, min=0., max=1.).detach().reshape([normal.shape[0]] + list(lobe_directions_old.shape))
+        #         lobe_intensity = lgtSGs[:, :, 4:].clone()
+        #         lobe_directions = lgtSGs[:, :, :3].clone()
+        #         lobe_width = lgtSGs[:, :, 3:4].clone()
+        #         lobe_intensity_vis = torch.multiply(right_mu_vis, lobe_intensity)
+        #         lobe_intensity_ind = torch.multiply(right_mu_vis, right_mu_ind)
+        #         lobe_intensity = lobe_intensity - lobe_intensity_vis + lobe_intensity_ind
+        #         lgtSGs = torch.cat((lobe_directions, lobe_width, lobe_intensity), dim=-1)
+        #         del z_vals, pts, sdf_output, canonical_points, feats, color, normal_, semantics, density, z_max, fg_weights, bg_weights
+
+        #     if left_node is not None:
+        #         z_vals = ray_sampler.get_z_vals(ray_dirs, cam_loc, False)
+        #         pts = cam_loc.unsqueeze(1) + z_vals.unsqueeze(2) * ray_dirs.unsqueeze(1)
+        #         (
+        #             sdf_output,
+        #             canonical_points,
+        #             feats
+        #         ) = volsdf_utils.sdf_func_with_deformer(
+        #             left_node.deformer,
+        #             left_node.implicit_network,
+        #             left_node.training,
+        #             pts.reshape(-1, 3),
+        #             left_node.deform_info,
+        #             left_node.node_id
+        #         )
+        #         num_samples = z_vals.shape[1]
+        #         color, normal_, semantics = left_node.render(
+        #             {"ray_dirs": ray_dirs, "cond": left_node.deform_info["cond"], "tfs": left_node.deform_info["tfs"]},
+        #             num_samples,
+        #             canonical_points,
+        #             feats,
+        #             None,
+        #             left_node.node_id,
+        #             None,None
+        #         )
+        #         density = left_node.density(sdf_output).view(-1, num_samples, 1)
+        #         z_max, _ = torch.max(z_vals,1)
+        #         fg_weights, bg_weights = volsdf_utils.density2weight(density, z_vals, z_max)
+        #         left_mu_ind = torch.sum(color * fg_weights[:, :, None], dim=1)
+        #         left_mu_vis = torch.sum(fg_weights[:, :, None], dim=1)
+        #         left_mu_ind = torch.clamp(left_mu_ind, min=0., max=1.).detach()
+        #         left_mu_vis = torch.clamp(left_mu_vis, min=0., max=1.).detach()
+        #         lobe_intensity = lgtSGs[:, :, 4:].clone()
+        #         lobe_directions = lgtSGs[:, :, :3].clone()
+        #         lobe_width = lgtSGs[:, :, 3:4].clone()
+        #         lobe_intensity_vis = torch.multiply(left_mu_vis, lobe_intensity)
+        #         lobe_intensity_ind = torch.multiply(left_mu_vis, left_mu_ind)
+        #         lobe_intensity = lobe_intensity - lobe_intensity_vis + lobe_intensity_ind
+        #         lgtSGs = torch.cat((lobe_directions, lobe_width, lobe_intensity), dim=-1)
+        #         del z_vals, pts, sdf_output, canonical_points, feats, color, normal_, semantics, density, z_max, fg_weights, bg_weights
+
