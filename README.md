@@ -1,5 +1,5 @@
 # TexHOI: Reconstructing Textures of 3D Unknown Objects in Monocular Hand-Object Interaction Scenes
-![](overview.png)
+<div style="text-align:center"><img src="overview.png" width="90%"></div>
 
 ## Quick Run
 ```
