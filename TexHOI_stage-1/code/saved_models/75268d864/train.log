@@ -1,0 +1,4 @@
+[32m2024-03-27 10:51:54.388[0m | [1mINFO    [0m | [36mcommon.comet_utils[0m:[36minit_experiment[0m:[36m124[0m - [1m_CudaDeviceProperties(name='NVIDIA GeForce RTX 3090', major=8, minor=6, total_memory=24259MB, multi_processor_count=82)[0m
+[32m2024-03-27 10:51:54.389[0m | [1mINFO    [0m | [36mcommon.comet_utils[0m:[36msave_args[0m:[36m52[0m - [1mSaved args at ./logs/75268d864/args.json[0m
+[32m2024-03-27 10:51:54.389[0m | [1mINFO    [0m | [36mcommon.comet_utils[0m:[36mlog_exp_meta[0m:[36m64[0m - [1mExperiment tags: ['ait-desktop', 'h2o'][0m
+[32m2024-03-27 10:51:56.552[0m | [33m[1mWARNING [0m | [36msrc.scene.hold_net[0m:[36minit_network[0m:[36m140[0m - [33m[1mDoing random init!!! not what CVPR was using!![0m
