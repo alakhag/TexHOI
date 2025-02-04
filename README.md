@@ -75,3 +75,4 @@ conda deactivate
 conda activate texhoi_stage1
 python training/exp_runner.py --conf confs_sg/default.conf --data ../../example_data/{seq_name} --expname {seq_name} --nepoch 2000 --max_niter 2000001 --gamma 1.0
 ```
+This work has been submitted to the IEEE for possible publication. Copyright may be transferred without notice, after which this version may no longer be accessible.
