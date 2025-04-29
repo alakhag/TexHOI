@@ -1,3 +1,4 @@
+[[CVM 2025 Best Paper Award]]
 # TexHOI: Reconstructing Textures of 3D Unknown Objects in Monocular Hand-Object Interaction Scenes
 [[Project Page]](https://alakhag.github.io/TexHOI-website/)
 
