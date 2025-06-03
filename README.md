@@ -3,7 +3,7 @@
 ### IEEE Transactions on Visualization and Computer Graphics (IEEE TVCG)
 [[Project Page]](https://alakhag.github.io/TexHOI-website/)
 
-📢 I plan to enter the job market in Fall 2025. If you have any openings, please [[email me]]((https://alakhag.github.io)
+📢 I plan to enter the job market in Fall 2025. If you have any openings, please [email me]((https://alakhag.github.io)
 
 <div style="text-align:center"><img src="overview.png" width="90%"></div>
 
